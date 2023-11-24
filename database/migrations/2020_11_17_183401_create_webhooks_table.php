@@ -20,7 +20,7 @@ class CreateWebhooksTable extends Migration
             $table->text('content')->nullable();
             $table->string('webhook_hash', 350)->nullable()->index();
             $table->string('my_webhook', 350)->nullable();
-            $table->bigInteger('user_id')->nullable();
+            $table->unsignedBigInteger('user_id')->nullable();
 
             $table->foreign('user_id')->references('id')->on('users');
         });
