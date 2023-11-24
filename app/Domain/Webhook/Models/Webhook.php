@@ -12,8 +12,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property string webhook_hash
  */
 class Webhook extends Model
-{
-    public const URL_WEBHOOK = 'https://webhook.app2u.co/v1/webhook-message/';
+{ 
+    public const URL_WEBHOOK = '/v1/webhook-message/';
     public const SENTRY = 'sentry';
     public const BITBUCKET = 'bitbucket';
 

@@ -16,7 +16,7 @@ class WebhookResource extends JsonResource
         return [
 //            'id' => $this->getKey(),
             'key' => $this->webhook_hash,
-            'webhook' => Webhook::URL_WEBHOOK . $this->webhook_hash,
+            'webhook' => env('APP_URL', 'https://webhook.app2u.co') . Webhook::URL_WEBHOOK . $this->webhook_hash,
             'content' => $this->content,
             'application' => $this->application,
             'my_webhook' => $this->my_webhook,
