@@ -43,7 +43,7 @@ class SendMessageWebhookAction
             });
 
         if ($webhook->application == Webhook::BITBUCKET) {
-            $bag = DiscordBag::fromRequest(request()->all());
+            $bag = DiscordBag::fromRequest(request()->all(), request());
         }
 
         if ($webhook->application == Webhook::SENTRY) {
@@ -61,7 +61,7 @@ class SendMessageWebhookAction
     {
         if ($application == Webhook::BITBUCKET) {
             $this->discordService
-                ->title('Alert! - ' . $application . ' | ' . $Bag->type)
+                ->title('Alert! - ' . $application . ' | ' . ($Bag->event ? " ({$Bag->event})" : $Bag->type))
                 ->description($this->descriptionDiscord($Bag))
                 ->footer('Time: ')
                 ->success()
@@ -88,28 +88,21 @@ class SendMessageWebhookAction
             return [
                 'Repository: ' . $discordBag->repository,
                 'Actor: ' . $discordBag->actor,
-                $discordBag->branch_name,
-                $discordBag->summary,
+                'Branch: ' . $discordBag->branch_name,
+                '',
+                'Commit#: ' . $discordBag->title,
+                'Msg: ' . $discordBag->summary,
             ];
         }
 
         if ($discordBag->type == 'pullrequest') {
             return [
                 'Repository: ' .$discordBag->repository,
-                'Actor: ' . $discordBag->actor,
+                'Title: ' . $discordBag->title,
+                array_key_exists('approval', $discordBag->attributes()) ? 'Approved: ' . $discordBag->approval : 'Actor: ' . $discordBag->actor,
                 'PullRequest: '. $discordBag->source . ' => ' . $discordBag->destination,
-                '',
-                $discordBag->summary,
-            ];
-        }
-
-        if ($discordBag->type == 'pullrequest' && $discordBag->approval != null) {
-            return [
-                'Repository: ' .$discordBag->repository,
-                'Approved: ' . $discordBag->approval,
-                'PullRequest: '. $discordBag->source . ' => ' . $discordBag->destination,
-                '',
-                $discordBag->summary,
+                $discordBag->summary ? PHP_EOL . 'Desc: ' . $discordBag->summary : '',
+                array_key_exists('comment', $discordBag->attributes()) ? 'Comment:' . PHP_EOL . $discordBag->comment : ''
             ];
         }
 
