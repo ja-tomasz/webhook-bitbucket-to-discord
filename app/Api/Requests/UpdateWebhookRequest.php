@@ -20,6 +20,8 @@ class UpdateWebhookRequest extends FormRequest
     {
         return [
             'webhook' => 'required',
+            'application' => 'string',
+            'content' => 'string'
         ];
     }
 }

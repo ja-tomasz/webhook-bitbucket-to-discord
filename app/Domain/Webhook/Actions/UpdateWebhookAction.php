@@ -27,6 +27,8 @@ class UpdateWebhookAction
         $data = $webhookBag->attributes();
 
         $dataUpdate['my_webhook'] = $data['webhook'];
+        $dataUpdate['application'] = $data['application'];
+        $dataUpdate['content'] = $data['content'];
 
         $webhook = $this->webhookRepository->findByHash($id);
 
